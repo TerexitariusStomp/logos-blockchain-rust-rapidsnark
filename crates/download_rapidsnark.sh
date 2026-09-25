@@ -66,11 +66,16 @@ if ! unzip -o "$zip_file" -d "$BUILD_DIR"; then
     exit 1
 fi
 
-# iden3 archives extract to "$asset/{lib,bin,include}".
+# iden3 archives extract to "$asset/{lib,bin,include}" — except the iOS zip,
+# which places the libraries flat at the archive root.
 # build.rs expects the libraries directly under "$BUILD_DIR/$arch", so flatten the "lib" directory into that location.
 # "bin" and "include" are unused (the FFI signatures are declared in src/lib.rs, no headers are needed).
 dest="$BUILD_DIR/$arch"
 mkdir -p "$dest"
-cp "$BUILD_DIR/$asset/lib/"* "$dest/"
+if [ -d "$BUILD_DIR/$asset/lib" ]; then
+    cp "$BUILD_DIR/$asset/lib/"* "$dest/"
+else
+    find "$BUILD_DIR/$asset" -maxdepth 1 -name '*.a' -o -name '*.dylib' | while read -r f; do cp "$f" "$dest/"; done
+fi
 
 echo "✅ Successfully installed rapidsnark $VERSION ($asset) into $dest"
