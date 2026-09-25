@@ -78,7 +78,7 @@ extern "C" {
         inputs: *const std::os::raw::c_char,
         verification_key: *const std::os::raw::c_char,
         error_msg: *mut std::os::raw::c_char,
-        error_msg_maxsize: std::ffi::c_ulong,
+        error_msg_maxsize: c_ulonglong,
     ) -> i32;
 }
 
