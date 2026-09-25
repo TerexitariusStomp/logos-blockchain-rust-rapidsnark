@@ -229,14 +229,16 @@ jobs:
     needs: [build, build-windows]
     runs-on: ubuntu-latest
     steps:
+      # Checkout first — it runs `git clean`, which would wipe a previously
+      # downloaded dist/ that is not tracked.
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           path: dist
           merge-multiple: true
-
-      - name: Checkout
-        uses: actions/checkout@v4
 
       - name: Publish / update release
         env:
