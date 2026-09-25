@@ -33,6 +33,8 @@ mkdir -p "$BUILD_DIR"
 arch=$(echo "$TARGET" | cut -d'-' -f1)
 
 # Map the rust target triple to the release asset slug and its hosting base URL.
+# RAPIDSNARK_BASE_URL overrides the resolved base (e.g. a mirror or fork that
+# hosts an asset not yet published upstream).
 case "$TARGET" in
     x86_64-*-linux-*)                       asset="rapidsnark-linux-x86_64-pic-$VERSION"; base_url="$FORK_BASE" ;;
     aarch64-*-linux-gnu*)                   asset="rapidsnark-linux-aarch64-pic-$VERSION"; base_url="$FORK_BASE" ;;
@@ -49,6 +51,7 @@ case "$TARGET" in
         ;;
 esac
 
+base_url="${RAPIDSNARK_BASE_URL:-$base_url}"
 zip_file="$BUILD_DIR/$asset.zip"
 
 echo "Downloading $asset.zip ..."

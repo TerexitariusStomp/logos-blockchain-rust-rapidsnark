@@ -235,10 +235,14 @@ jobs:
           path: dist
           merge-multiple: true
 
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Publish / update release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          RAPIDSNARK_VERSION="$(cat RAPIDSNARK_VERSION)"
           TAG="rapidsnark-pic-${RAPIDSNARK_VERSION}"
           ls -la dist/
           gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
