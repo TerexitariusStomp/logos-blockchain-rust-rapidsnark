@@ -52,6 +52,11 @@ fn main() {
         println!("cargo:rustc-link-lib=static=fr");
         println!("cargo:rustc-link-lib=static=fq");
         println!("cargo:rustc-link-lib=static=gmp");
+        // The Windows archive is built against the mman-win32 mmap shim
+        // (libmman.a ships inside the archive's lib/ directory).
+        if env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows") {
+            println!("cargo:rustc-link-lib=static=mman");
+        }
     } else {
         println!("cargo:rustc-link-lib=dylib=rapidsnark");
     }
